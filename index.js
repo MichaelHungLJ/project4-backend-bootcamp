@@ -3,6 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const axios = require("axios");
 const CronJob = require("cron").CronJob;
+const PORT = process.env.PORT || 3000;
 
 require("dotenv").config();
 
@@ -36,16 +37,16 @@ app.use("/users", usersRouter);
 app.use("/coinlist", coinlistRouter);
 
 var getCoinList = new CronJob(
-  "* * * * * *",
+  "0 */1 * * * *",
   async function () {
-    const response = await axios.get("http://localhost:3000/coinlist");
+    const response = await axios.get(
+      "https://api.coingecko.com/api/v3/coins/list"
+    );
     console.log(response.data);
   },
   null
 );
 
 getCoinList.start();
-
-const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => console.log(`App listening on port ${PORT}`));

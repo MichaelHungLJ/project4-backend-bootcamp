@@ -9,7 +9,7 @@ class UsersRouter {
   routes() {
     router.get("/", this.controller.test.bind(this.controller));
 
-    // router.post("/", this.controller.createUser.bind(this.controller));
+    router.post("/", this.controller.createUser.bind(this.controller));
 
     return router;
   }
