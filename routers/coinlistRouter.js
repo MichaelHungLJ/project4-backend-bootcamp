@@ -12,6 +12,8 @@ class CoinlistRouter {
 
     router.get("/", this.controller.testCoinList.bind(this.controller));
 
+    router.post("/", this.controller.updateCoinList.bind(this.controller));
+
     return router;
   }
 }

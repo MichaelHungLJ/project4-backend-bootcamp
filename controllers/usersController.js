@@ -1,3 +1,6 @@
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
 const BaseController = require("./baseController");
 
 class UsersController extends BaseController {
@@ -7,9 +10,59 @@ class UsersController extends BaseController {
 
   // POST request
   async createUser(req, res) {
-    // name email password
+    const { name, email, password } = req.body;
 
-    return res.send("hello");
+    if (!name || !email || !password) {
+      return res
+        .status(400)
+        .json({ success: false, message: "missing inputs" });
+    }
+
+    try {
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      const payload = {
+        name: name,
+        email: email,
+        password: hashedPassword,
+      };
+
+      const data = await this.model.create(payload);
+
+      return res.json({ success: true, message: "User created!" });
+    } catch (err) {
+      return res.json({ success: false, error: err });
+    }
+  }
+
+  // POST request
+  async loginUser(req, res) {
+    const user = await this.model.findOne({
+      where: { name: req.body.name },
+    });
+
+    try {
+      const match = await bcrypt.compare(req.body.password, user.password);
+
+      const payload = {
+        name: user.name,
+        email: user.email,
+        password: user.password,
+      };
+
+      const accessToken = jwt.sign(payload, process.env.JWT_SECRET, {
+        expiresIn: "1h",
+      });
+
+      if (match) {
+        return res.json({ accessToken: accessToken });
+      } else {
+        return res.json({ message: "Invalid Credentials" });
+      }
+    } catch (err) {
+      console.log("Error: ", err);
+      return res.json({ success: false, error: err });
+    }
   }
 }
 

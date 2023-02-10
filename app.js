@@ -8,16 +8,19 @@ const PORT = process.env.PORT || 3000;
 require("dotenv").config();
 
 // import models
-const db = require("./db/models/index");
-// import middlewares
+const db = require("./db/models");
+const { users, wallets, transactions, coinlists } = db;
+
+// import middlewaresc
+const updateCoinList = require("./middleware/coinlist");
 
 // import controllers
 const UsersController = require("./controllers/usersController");
 const CoinlistController = require("./controllers/coinlistController");
 
 // initialize controllers
-const usersController = new UsersController(db.user);
-const coinlistController = new CoinlistController(db.coinlist);
+const usersController = new UsersController(users);
+const coinlistController = new CoinlistController(coinlists);
 
 // import routers
 const UsersRouter = require("./routers/usersRouter");
@@ -33,20 +36,8 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+// updateCoinList();
 app.use("/users", usersRouter);
 app.use("/coinlist", coinlistRouter);
-
-var getCoinList = new CronJob(
-  "0 */1 * * * *",
-  async function () {
-    const response = await axios.get(
-      "https://api.coingecko.com/api/v3/coins/list"
-    );
-    console.log(response.data);
-  },
-  null
-);
-
-getCoinList.start();
 
 app.listen(PORT, () => console.log(`App listening on port ${PORT}`));

@@ -8,13 +8,13 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      this.belongsTo(models.user);
-      this.belongsTo(models.transaction);
+      this.belongsTo(models.users);
+      this.belongsTo(models.transactions);
     }
   }
   Transactions.init(
     {
-      userId: {
+      user_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
           key: "id",
         },
       },
-      walletId: {
+      wallet_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {

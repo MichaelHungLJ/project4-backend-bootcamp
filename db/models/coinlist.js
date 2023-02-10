@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   Coinlists.init(
     {
-      coinId: {
+      coin_id: {
         type: DataTypes.STRING,
         allowNull: false,
       },
