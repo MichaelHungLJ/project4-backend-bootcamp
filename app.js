@@ -12,7 +12,7 @@ const db = require("./db/models");
 const { users, wallets, transactions, coinlists } = db;
 
 // import middlewaresc
-const updateCoinList = require("./middleware/coinlist");
+const auth = require("./middleware/auth");
 
 // import controllers
 const UsersController = require("./controllers/usersController");
@@ -27,7 +27,7 @@ const UsersRouter = require("./routers/usersRouter");
 const CoinlistRouter = require("./routers/coinlistRouter");
 
 // initialize routers
-const usersRouter = new UsersRouter(usersController).routes();
+const usersRouter = new UsersRouter(usersController, auth).routes();
 const coinlistRouter = new CoinlistRouter(coinlistController).routes();
 
 // Put express together below this line
@@ -36,7 +36,6 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// updateCoinList();
 app.use("/users", usersRouter);
 app.use("/coinlist", coinlistRouter);
 
