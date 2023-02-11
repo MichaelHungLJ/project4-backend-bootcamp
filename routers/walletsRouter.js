@@ -11,7 +11,7 @@ class UsersRouter {
     router.get("/", this.controller.getWallet.bind(this.controller));
 
     // // Create
-    // router.post("/", this.controller.addWallet.bind(this.controller));
+    router.post("/", this.controller.addWallet.bind(this.controller));
 
     // // Update
     // router.put("/", this.controller.updateWallet.bind(this.controller));
