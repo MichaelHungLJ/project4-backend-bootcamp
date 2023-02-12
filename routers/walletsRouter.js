@@ -6,18 +6,34 @@ class UsersRouter {
     this.controller = controller;
   }
 
+  // Get request need to change on how to query username via authentication
+
   routes() {
-    // Read
-    router.get("/", this.controller.getWallet.bind(this.controller));
+    // http://localhost:3000/wallets/
+    router.get(
+      "/getAllWallets/:name",
+      this.controller.getAllWallets.bind(this.controller)
+    );
 
-    // // Create
-    router.post("/", this.controller.addWallet.bind(this.controller));
+    router.get(
+      "/getWalletId/:address",
+      this.controller.getWalletId.bind(this.controller)
+    );
 
-    // // Update
-    // router.put("/", this.controller.updateWallet.bind(this.controller));
+    // // Create wallet
+    router.post("/addWallet", this.controller.addWallet.bind(this.controller));
 
-    // // Delete
-    // router.delete("/", this.controller.deleteWallet.bind(this.controller));
+    // // Update Wallet
+    router.put(
+      "/updateWallet",
+      this.controller.updateWallet.bind(this.controller)
+    );
+
+    // // Delete (WIP)
+    router.delete(
+      "/deleteWallet",
+      this.controller.deleteWallet.bind(this.controller)
+    );
 
     return router;
   }
