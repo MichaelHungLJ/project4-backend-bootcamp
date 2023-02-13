@@ -5,6 +5,13 @@ class TransactionsController extends BaseController {
     super(model);
   }
 
+  // GET REQUEST
+  // Get all transaction that belongs to the user
+  async getAllTransactionsByUser(req, res) {}
+
+  // Get all transactions related to the wallet
+  async getAllTransactionByWallet(req, res) {}
+
   // POST
   // Input: user_id, wallet_id, wallet (name), date, type, coin, quantity, price
   async addTransaction(req, res) {
