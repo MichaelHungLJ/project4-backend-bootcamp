@@ -22,11 +22,19 @@ class UsersController extends BaseController {
   async createUser(req, res) {
     const { name, email, password } = req.body;
 
+    /// VALIIDATION ///
     if (!name || !email || !password) {
       return res
         .status(400)
         .json({ success: false, message: "missing inputs" });
     }
+
+    const checkUser = await this.model.findOne({ where: { email: email } });
+
+    if (checkUser) {
+      return res.status(400).json({ success: false, message: "Email taken!" });
+    }
+    /// VALIDATION ///
 
     try {
       const hashedPassword = await bcrypt.hash(password, 10);
@@ -39,18 +47,41 @@ class UsersController extends BaseController {
 
       const data = await this.model.create(payload);
 
-      return res.json({ success: true, message: "User created!" });
+      const accessToken = await jwt.sign(payload, process.env.JWT_SECRET, {
+        expiresIn: "1h",
+      });
+
+      const newUser = {
+        id: data.dataValues.id,
+        name: data.dataValues.name,
+        email: data.dataValues.email,
+        image: data.dataValues.image,
+        biography: data.dataValues.biography,
+        accessToken: accessToken,
+      };
+
+      return res
+        .status(201)
+        .json({ success: true, message: "User created!", user: newUser });
     } catch (err) {
-      return res.json({ success: false, error: err });
+      return res.status(400).json({ success: false, error: err });
     }
   }
 
   // POST request
-  // Input: { name : name, password: password}
+  // Input: { email : email, password: password}
   async loginUser(req, res) {
     const user = await this.model.findOne({
-      where: { name: req.body.name },
+      where: { email: req.body.email },
     });
+
+    /// VALIDATION ///
+    if (!user) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Wrong email/password" });
+    }
+    /// VALIDATION ///
 
     try {
       const match = await bcrypt.compare(req.body.password, user.password);
@@ -65,14 +96,24 @@ class UsersController extends BaseController {
         expiresIn: "1h",
       });
 
+      const loggedUser = {
+        id: user.dataValues.id,
+        name: user.dataValues.name,
+        email: user.dataValues.email,
+        image: user.dataValues.image,
+        biography: user.dataValues.biography,
+        accessToken: accessToken,
+      };
+
       if (match) {
-        return res.json({ accessToken: accessToken });
+        return res.status(200).json({ success: true, user: loggedUser });
       } else {
-        return res.json({ message: "Invalid Credentials" });
+        return res
+          .status(400)
+          .json({ success: false, message: "Invalid Credentials" });
       }
     } catch (err) {
-      console.log("Error: ", err);
-      return res.json({ success: false, error: err });
+      return res.status(400).json({ success: false, error: err });
     }
   }
 }
