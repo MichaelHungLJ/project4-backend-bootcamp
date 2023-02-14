@@ -1,5 +1,6 @@
 const BaseController = require("./baseController");
 const axios = require("axios");
+const constant = require("../constant");
 
 class UsersController extends BaseController {
   constructor(model) {
@@ -29,6 +30,22 @@ class UsersController extends BaseController {
     try {
       const response = await this.model.findOne({
         where: { address: address },
+      });
+      return res.status(200).json(response.dataValues.id);
+    } catch (err) {
+      return res.status(403).json({ success: false, error: err });
+    }
+  }
+
+  // Input query params: {name : walletName}
+  async getWalletIdByName(req, res) {
+    const { name } = req.query;
+
+    try {
+      const response = await this.model.findOne({
+        where: {
+          name: name,
+        },
       });
       return res.status(200).json(response.dataValues.id);
     } catch (err) {
