@@ -20,6 +20,12 @@ class UsersRouter {
       this.controller.getWalletId.bind(this.controller)
     );
 
+    // Get wallet ID by wallet name
+    router.get(
+      "/getWalletIdByName",
+      this.controller.getWalletIdByName.bind(this.controller)
+    );
+
     // // Create wallet
     router.post("/addWallet", this.controller.addWallet.bind(this.controller));
 

@@ -36,7 +36,7 @@ const CoinlistRouter = require("./routers/coinlistRouter");
 const usersRouter = new UsersRouter(usersController, auth).routes();
 const walletsRouter = new WalletsRouter(walletController).routes();
 const transactionsRouter = new TransactionsRouter(
-  TransactionsController
+  transactionsController
 ).routes();
 const coinlistRouter = new CoinlistRouter(coinlistController).routes();
 

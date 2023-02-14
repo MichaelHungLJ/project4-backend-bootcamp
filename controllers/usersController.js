@@ -8,9 +8,12 @@ class UsersController extends BaseController {
     super(model);
   }
 
-  // Input as params (name)
+  // GET Request
+  // Input query body { email : email }
   async getUserId(req, res) {
-    const data = await this.model.findOne({ where: { name: req.params.name } });
+    const data = await this.model.findOne({
+      where: { email: req.query.email },
+    });
 
     const id = data.id;
 
@@ -18,7 +21,7 @@ class UsersController extends BaseController {
   }
 
   // POST request
-  // Input: {name:name, email:email, password:password}
+  // Input body: {name:name, email:email, password:password}
   async createUser(req, res) {
     const { name, email, password } = req.body;
 
