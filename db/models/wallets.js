@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       this.belongsTo(models.users);
-      this.hasMany(models.transactions, { foreignKey: "user_id" });
+      this.hasMany(models.transactions, { foreignKey: "walletId" });
     }
   }
   Wallets.init(
@@ -28,12 +28,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      user_id: {
+      userId: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          // Sequelize docs suggest this should be plural table name and not singular model name
-          // https://sequelize.org/api/v6/class/src/model.js~model#static-method-init
           model: "users",
           key: "id",
         },

@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   Transactions.init(
     {
-      user_id: {
+      userId: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
           key: "id",
         },
       },
-      wallet_id: {
+      walletId: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
