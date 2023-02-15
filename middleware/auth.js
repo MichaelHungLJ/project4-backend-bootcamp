@@ -20,7 +20,6 @@ const auth = async (req, res, next) => {
     console.log("Verified Token: ", verifiedToken);
 
     next();
-    retur;
   } catch (err) {
     return res.json({ success: false, error: err });
   }
