@@ -8,13 +8,13 @@ class TransactionsRouter {
 
   routes() {
     router.get(
-      "/getAllTransactionByUser",
-      this.controller.getAllTransactionsByUser.bind(this.controller)
+      "/getAllTransactions",
+      this.controller.getAllTransactions.bind(this.controller)
     );
 
     router.get(
-      "/getAllTransactionByWallet",
-      this.controller.getAllTransactionByWallet.bind(this.controller)
+      "/getWalletTransactions",
+      this.controller.getWalletTransactions.bind(this.controller)
     );
 
     router.post(
