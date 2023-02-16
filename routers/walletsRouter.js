@@ -9,24 +9,17 @@ class UsersRouter {
   // Get request need to change on how to query username via authentication
 
   routes() {
-    // http://localhost:3000/wallets/
     router.get(
-      "/getAllWallets/:name",
+      "/getAllWallets",
       this.controller.getAllWallets.bind(this.controller)
     );
 
     router.get(
-      "/getWalletId/:address",
+      "/getWalletId",
       this.controller.getWalletId.bind(this.controller)
     );
 
-    // Get wallet ID by wallet name
-    router.get(
-      "/getWalletIdByName",
-      this.controller.getWalletIdByName.bind(this.controller)
-    );
-
-    // // Create wallet
+    // // Add wallet
     router.post("/addWallet", this.controller.addWallet.bind(this.controller));
 
     // // Update Wallet
@@ -35,7 +28,7 @@ class UsersRouter {
       this.controller.updateWallet.bind(this.controller)
     );
 
-    // // Delete (WIP)
+    // // Delete
     router.delete(
       "/deleteWallet",
       this.controller.deleteWallet.bind(this.controller)

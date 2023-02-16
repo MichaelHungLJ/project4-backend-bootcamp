@@ -8,99 +8,93 @@ class UsersController extends BaseController {
   }
 
   // GET request
+  // Input query: { user_id }
   async getAllWallets(req, res) {
-    const { name } = req.params;
-
+    const { user_id } = req.query;
+    console.log(req.query);
     try {
-      // Get user id first
-      const response = await axios.get("http://localhost:3000/users/" + name);
-
       const data = await this.model.findAll({
-        where: { user_id: response.data.id },
+        where: { userId: user_id },
       });
 
-      return res.status(200).json(data);
+      return res.status(200).json({ success: true, wallets: data });
     } catch (err) {
+      console.log("Error: ", err);
       return res.status(403).json({ success: false, error: err });
     }
   }
 
+  // GET request
+  // Input query: {user_id: user_id, address: address}
   async getWalletId(req, res) {
-    const { address } = req.params;
+    const { user_id, address } = req.query;
     try {
       const response = await this.model.findOne({
-        where: { address: address },
+        where: { user_id: user_id, address: address },
       });
-      return res.status(200).json(response.dataValues.id);
-    } catch (err) {
-      return res.status(403).json({ success: false, error: err });
-    }
-  }
-
-  // Input query params: {name : walletName}
-  async getWalletIdByName(req, res) {
-    const { name } = req.query;
-
-    try {
-      const response = await this.model.findOne({
-        where: {
-          name: name,
-        },
-      });
-      return res.status(200).json(response.dataValues.id);
+      console.log(response);
+      return res
+        .status(200)
+        .json({ success: true, walletId: response.dataValues.id });
     } catch (err) {
       return res.status(403).json({ success: false, error: err });
     }
   }
 
   async addWallet(req, res) {
-    // INPUTS
-    const { name, address, type, user } = req.body;
+    const { name, address, type, user_id } = req.body;
 
     try {
-      // response.data.id - get current user_id
-      const response = await axios.get("http://localhost:3000/users/" + user);
-
       const payload = {
         name: name,
         address: address,
         type: type,
-        user_id: response.data.id,
+        userId: user_id,
       };
       const data = await this.model.create(payload);
 
-      return res.status(200).json({ success: true, message: "Wallet added" });
+      return res
+        .status(200)
+        .json({ success: true, message: "Wallet added!", wallet: data });
     } catch (err) {
       return res.status(403).json({ success: false, error: err });
     }
   }
 
   async updateWallet(req, res) {
-    const { name, address, user } = req.body;
+    const { name, address, type, user_id } = req.body;
     try {
-      // response.data.id - get current user_id
-      const response = await axios.get("http://localhost:3000/users/" + user);
-
       const data = await this.model.update(
-        { name: name },
+        { name: name, type: type },
         {
           where: {
             address: address,
-            user_id: response.data.id,
+            userId: user_id,
           },
         }
       );
 
       return res
         .status(200)
-        .json({ success: true, message: "Wallet name updated!" });
+        .json({ success: true, message: "Wallet updated!" });
     } catch (err) {
       return res.status(403).json({ success: false, error: err });
     }
   }
 
   async deleteWallet(req, res) {
+    const { user_id, address } = req.body;
+
     try {
+      const data = await this.model.destroy({
+        where: {
+          userId: user_id,
+          address: address,
+        },
+      });
+      return res
+        .status(200)
+        .json({ success: true, message: "Wallet deleted!" });
     } catch (err) {
       return res.status(403).json({ success: false, error: err });
     }
