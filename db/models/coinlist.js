@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   Coinlists.init(
     {
-      coin_id: {
+      coinId: {
         type: DataTypes.STRING,
         allowNull: false,
       },
@@ -30,6 +30,7 @@ module.exports = (sequelize, DataTypes) => {
       sequelize,
       modelName: "coinlists",
       underscored: true,
+      timestamps: true,
     }
   );
   return Coinlists;

@@ -14,4 +14,7 @@ module.exports = {
     GET_WALLET_TXNS: `http://localhost:${process.env.PORT}/transactions/getWalletTransactions`,
     ADD_TXN: `http://localhost:${process.env.PORT}/transactions/addTransaction`,
   },
+  coingecko: {
+    GET_ALL_COIN_IDS: `https://api.coingecko.com/api/v3/coins/list`,
+  },
 };
