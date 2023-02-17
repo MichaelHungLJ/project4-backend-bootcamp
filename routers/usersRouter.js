@@ -12,7 +12,7 @@ class UsersRouter {
     router.get("/test", this.auth, this.controller.currentUser.bind(this.controller));
 
     //
-    router.get("/:name", this.controller.getUserId.bind(this.controller));
+    router.get("/getUserId", this.controller.getUserId.bind(this.controller));
 
     router.post("/signup", this.controller.createUser.bind(this.controller));
     router.post("/login", this.controller.loginUser.bind(this.controller));

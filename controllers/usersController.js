@@ -9,9 +9,12 @@ class UsersController extends BaseController {
     super(model);
   }
 
-  // Input as params (name)
+  // GET Request
+  // Input query body { email : email }
   async getUserId(req, res) {
-    const data = await this.model.findOne({ where: { name: req.params.name } });
+    const data = await this.model.findOne({
+      where: { email: req.query.email },
+    });
 
     const id = data.id;
 
@@ -19,15 +22,23 @@ class UsersController extends BaseController {
   }
 
   // POST request
-  // Input: {name:name, email:email, password:password}
+  // Input body: {name:name, email:email, password:password}
   async createUser(req, res) {
     const { name, email, password } = req.body;
 
+    /// VALIIDATION ///
     if (!name || !email || !password) {
       return res
         .status(400)
         .json({ success: false, message: "missing inputs" });
     }
+
+    const checkUser = await this.model.findOne({ where: { email: email } });
+
+    if (checkUser) {
+      return res.status(400).json({ success: false, message: "Email taken!" });
+    }
+    /// VALIDATION ///
 
     try {
       const hashedPassword = await bcrypt.hash(password, 10);
@@ -49,7 +60,7 @@ class UsersController extends BaseController {
 
       console.log("newuser,",newuser)
 
-      newuser.dataValues.password = null
+      delete newuser.dataValues.password
 
       newuser.dataValues.token = await jwt.sign(payload, process.env.JWT_SECRET, {
         expiresIn:"1h"
@@ -58,22 +69,27 @@ class UsersController extends BaseController {
       // console.log("Wtf is newuser", newuser)
       return res.status(200).json({newuser});
     } catch (err) {
-      console.log(err)
-      return res.json({ success: false, error: err });
+      return res.status(400).json({ success: false, error: err });
     }
   }
 
   // POST request
-  // Input: { name : name, password: password}
+  // Input: { email : email, password: password}
   async loginUser(req, res) {
 
     console.log("req",req.body)
     const user = await this.model.findOne({
-      where: { name: req.body.name },
+      where: { email: req.body.email },
     });
 
-    console.log("user",user)
-    
+    /// VALIDATION ///
+    if (!user) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Wrong email/password" });
+    }
+    /// VALIDATION ///
+
     try {
       console.log("req.body.password",req.body.password)
       console.log("user.password",user.password)
@@ -94,11 +110,12 @@ class UsersController extends BaseController {
       if (match) {
         return res.json({ user });
       } else {
-        return res.json({ message: "Invalid Credentials" });
+        return res
+          .status(400)
+          .json({ success: false, message: "Invalid Credentials" });
       }
     } catch (err) {
-      console.log("Error: ", err);
-      return res.json({ success: false, error: err });
+      return res.status(400).json({ success: false, error: err });
     }
   }
 
