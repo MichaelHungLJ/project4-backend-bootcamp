@@ -2,6 +2,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const BaseController = require("./baseController");
+const { UnauthorizedError, AlreadyTakenError } = require('../helpers/customError.js')
 
 class UsersController extends BaseController {
   constructor(model) {
@@ -37,10 +38,27 @@ class UsersController extends BaseController {
         password: hashedPassword,
       };
 
-      const data = await this.model.create(payload);
+      const userExists = await this.model.findOne({
+        where: { email: req.body.email },
+      });
+      if (userExists) throw new AlreadyTakenError("Email", "try logging in");
 
-      return res.json({ success: true, message: "User created!" });
+      // creating user
+      console.log("payload:",payload)
+      const newuser = await this.model.create(payload);
+
+      console.log("newuser,",newuser)
+
+      newuser.dataValues.password = null
+
+      newuser.dataValues.token = await jwt.sign(payload, process.env.JWT_SECRET, {
+        expiresIn:"1h"
+      })
+
+      // console.log("Wtf is newuser", newuser)
+      return res.status(200).json({newuser});
     } catch (err) {
+      console.log(err)
       return res.json({ success: false, error: err });
     }
   }
@@ -48,25 +66,33 @@ class UsersController extends BaseController {
   // POST request
   // Input: { name : name, password: password}
   async loginUser(req, res) {
+
+    console.log("req",req.body)
     const user = await this.model.findOne({
       where: { name: req.body.name },
     });
 
+    console.log("user",user)
+    
     try {
+      console.log("req.body.password",req.body.password)
+      console.log("user.password",user.password)
       const match = await bcrypt.compare(req.body.password, user.password);
 
+      console.log("match",match)
       const payload = {
         name: user.name,
         email: user.email,
         password: user.password,
       };
 
-      const accessToken = jwt.sign(payload, process.env.JWT_SECRET, {
+      user.dataValues.token = jwt.sign(payload, process.env.JWT_SECRET, {
         expiresIn: "1h",
       });
 
+
       if (match) {
-        return res.json({ accessToken: accessToken });
+        return res.json({ user });
       } else {
         return res.json({ message: "Invalid Credentials" });
       }
@@ -75,6 +101,20 @@ class UsersController extends BaseController {
       return res.json({ success: false, error: err });
     }
   }
+
+
+  async currentUser(req, res){
+    try {
+      const loggedUser = req.verifiedToken;
+      if (!loggedUser) throw new UnauthorizedError();
+  
+      // delete loggedUser.password
+      res.json({ user: loggedUser });
+    } catch (error) {
+      console.log("Error!",error)
+    }
+  }
+
 }
 
 module.exports = UsersController;
