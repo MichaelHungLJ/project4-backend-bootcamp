@@ -10,13 +10,10 @@ class CoinlistController extends BaseController {
 
     try {
       const symbol = coin.toLowerCase();
-      console.log("Is this lower case?", symbol);
 
       const response = await this.model.findOne({ where: { symbol: symbol } });
 
-      console.log(response);
-
-      return res.status(200).res.json({ success: true, data: response });
+      return res.status(200).json({ success: true, data: response.dataValues });
     } catch (error) {
       return res.status(400).json({ success: false, message: `Error` });
     }
