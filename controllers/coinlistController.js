@@ -5,13 +5,24 @@ class CoinlistController extends BaseController {
     super(model);
   }
 
-  async testCoinList(req, res) {
-    return res.send("CoinList Controller Works!");
+  async getCoinId(req, res) {
+    const { coin } = req.query;
+
+    try {
+      const symbol = coin.toLowerCase();
+
+      const response = await this.model.findOne({ where: { symbol: symbol } });
+
+      return res.status(200).json({ success: true, data: response.dataValues });
+    } catch (error) {
+      return res.status(400).json({ success: false, message: `Error` });
+    }
   }
 
   async updateCoinList(req, res) {
     try {
-      const { id, symbol, name } = req.body;
+      // data will be in an array
+      const data = req.body;
 
       const payload = {
         coin_id: id,
@@ -20,10 +31,9 @@ class CoinlistController extends BaseController {
       };
 
       console.log("Payload here: ", payload);
-      const data = await this.model.create(payload);
+      // const data = await this.model.create(payload);
       return res.json("Data!");
     } catch (err) {
-      console.log(err);
       return res.status(400).send({ err });
     }
   }

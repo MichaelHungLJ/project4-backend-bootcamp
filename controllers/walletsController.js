@@ -1,6 +1,7 @@
 const BaseController = require("./baseController");
 const axios = require("axios");
 const constant = require("../constant");
+const checkWalletHoldings = require("../helpers/checkWalletHoldings");
 
 class UsersController extends BaseController {
   constructor(model) {
@@ -97,6 +98,26 @@ class UsersController extends BaseController {
         .json({ success: true, message: "Wallet deleted!" });
     } catch (err) {
       return res.status(403).json({ success: false, error: err });
+    }
+  }
+
+  /// DATA ANALYTICS ///
+  // GET request, query: wallet_id, user_id
+  async getWalletData(req, res) {
+    const { user_id, wallet_id } = req.query;
+    try {
+      // Get all transactions related to wallet
+      const response = await axios.get(constant.transactions.GET_WALLET_TXNS, {
+        params: { user_id: user_id, wallet_id: wallet_id },
+      });
+      const txndata = response.data.data; // naming gg
+
+      // Helper function
+      const walletData = await checkWalletHoldings(txndata);
+
+      return res.status(200).send(walletData);
+    } catch (err) {
+      return res.status(400).json({ success: false, error: err });
     }
   }
 

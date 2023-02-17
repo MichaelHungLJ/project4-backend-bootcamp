@@ -4,7 +4,6 @@ const cors = require("cors");
 const axios = require("axios");
 const CronJob = require("cron").CronJob;
 const PORT = process.env.PORT || 3000;
-
 require("dotenv").config();
 
 // import models

@@ -34,6 +34,11 @@ class UsersRouter {
       this.controller.deleteWallet.bind(this.controller)
     );
 
+    router.get(
+      "/getWalletData",
+      this.controller.getWalletData.bind(this.controller)
+    );
+
     return router;
   }
 }
