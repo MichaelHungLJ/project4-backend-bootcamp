@@ -41,9 +41,10 @@ class TransactionsController extends BaseController {
   async addTransaction(req, res) {
     const { user_id, wallet_id, wallet, date, type, coin, quantity, price } =
       req.body;
-
+    console.log(date);
+    console.log(req.body);
     //Assuming date is passed in as string from Front End (yyyy/mm/dd)
-    const dateParts = date.split("/");
+    const dateParts = date.split("-");
     const year = parseInt(dateParts[0], 10);
     const month = parseInt(dateParts[1], 10) - 1;
     const day = parseInt(dateParts[2], 10);
