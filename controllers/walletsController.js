@@ -13,7 +13,6 @@ class UsersController extends BaseController {
   // Input query: { user_id }
   async getAllWallets(req, res) {
     const { user_id } = req.query;
-    console.log(req.query);
     try {
       const data = await this.model.findAll({
         where: { userId: user_id },

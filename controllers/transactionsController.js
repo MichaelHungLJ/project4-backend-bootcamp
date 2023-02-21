@@ -15,7 +15,7 @@ class TransactionsController extends BaseController {
     try {
       const data = await this.model.findAll({ where: { userId: user_id } });
 
-      console.log("DATA IS: ", data);
+      console.log(data[8]["date"]);
       return res.status(200).json({ success: true, data: data });
     } catch (err) {
       console.log(err);

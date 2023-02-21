@@ -9,6 +9,7 @@ module.exports = {
     UPDATE_WALLET: `http://localhost:${process.env.PORT}/wallets/updateWallet`,
     DELETE_WALLET: `http://localhost:${process.env.PORT}/wallets/deleteWallet`,
     GET_WALLET_DATA: `http://localhost:${process.env.PORT}/wallets/getWalletData`,
+    GET_ALL_HOLDINGS: `http://localhost:${process.env.PORT}/wallets/getPortfolio`,
   },
   transactions: {
     GET_ALL_TXNS: `http://localhost:${process.env.PORT}/transactions/getAllTransactions`,
@@ -21,5 +22,8 @@ module.exports = {
   coingecko: {
     GET_ALL_COIN_IDS: `https://api.coingecko.com/api/v3/coins/list`,
     COIN_PRICE: `https://api.coingecko.com/api/v3/simple/price`,
+  },
+  portfolio: {
+    GET_PORTFOLIO_GROWTH: `http://localhost:${process.env.PORT}/portfolio/getPortfolioGrowth`,
   },
 };
