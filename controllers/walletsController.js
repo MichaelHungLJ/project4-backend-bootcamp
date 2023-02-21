@@ -2,6 +2,7 @@ const BaseController = require("./baseController");
 const axios = require("axios");
 const constant = require("../constant");
 const checkWalletHoldings = require("../helpers/checkWalletHoldings");
+const combineWallets = require("../helpers/combineWallets");
 
 class UsersController extends BaseController {
   constructor(model) {
@@ -118,6 +119,38 @@ class UsersController extends BaseController {
       return res.status(200).send(walletData);
     } catch (err) {
       return res.status(400).json({ success: false, error: err });
+    }
+  }
+
+  async getPortfolio(req, res) {
+    const { user_id } = req.query;
+    const portfolio = [];
+    const temp = [];
+    try {
+      // get all wallet ids
+      const response = await axios.get(constant.wallets.GET_ALL_WALLETS, {
+        params: { user_id: user_id },
+      });
+
+      const wallets = response.data.wallets;
+      // get all wallet data and store into portfolio (including duplicates)
+      for (let i = 0; i < wallets.length; i++) {
+        const id = wallets[i].id;
+
+        const data = await axios.get(constant.wallets.GET_WALLET_DATA, {
+          params: { user_id: user_id, wallet_id: id },
+        });
+
+        const coins = data.data;
+        temp.push(...coins);
+      }
+      // consolidate duplicate coin holdings into 1 array
+      let portfolio = combineWallets(temp);
+
+      return res.status(200).json({ success: true, data: portfolio });
+    } catch (err) {
+      console.log(err);
+      return res.status(400).send(err);
     }
   }
 
