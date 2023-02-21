@@ -1,6 +1,7 @@
 const BaseController = require("./baseController");
 const axios = require("axios");
 const constant = require("../constant");
+const getCurrentDate = require("../helpers/getCurrentDate");
 
 class PortfoliosController extends BaseController {
   constructor(model) {
@@ -19,8 +20,8 @@ class PortfoliosController extends BaseController {
   }
 
   async updatePortfolio(req, res) {
-    const { user_id, date } = req.body;
-
+    const { user_id } = req.body;
+    const newDate = getCurrentDate();
     try {
       const response = await axios.get(constant.wallets.GET_ALL_HOLDINGS, {
         params: { user_id: user_id },
@@ -43,7 +44,7 @@ class PortfoliosController extends BaseController {
       const payload = {
         userId: user_id,
         value: Math.floor(totalValue),
-        dates: "2023-02-07",
+        dates: newDate,
         days: newDay,
       };
 

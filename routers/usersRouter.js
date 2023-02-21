@@ -9,7 +9,11 @@ class UsersRouter {
 
   routes() {
     // http://localhost:3000/users/signup
-    router.get("/test", this.auth, this.controller.currentUser.bind(this.controller));
+    router.get(
+      "/test",
+      this.auth,
+      this.controller.currentUser.bind(this.controller)
+    );
 
     //
     router.get("/getUserId", this.controller.getUserId.bind(this.controller));
@@ -18,6 +22,11 @@ class UsersRouter {
     router.post("/login", this.controller.loginUser.bind(this.controller));
 
     router.get("/validate", this.controller.currentUser.bind(this.controller));
+
+    router.get(
+      "/getAllUserId",
+      this.controller.getAllUserId.bind(this.controller)
+    );
     return router;
   }
 }

@@ -12,6 +12,7 @@ const { users, wallets, transactions, coinlists, portfolios } = db;
 
 // import middlewaresc
 const auth = require("./middleware/auth");
+const updateAllUserPortfolio = require("./middleware/updateAllUserPortfolio");
 
 // import controllers
 const UsersController = require("./controllers/usersController");
@@ -54,6 +55,10 @@ app.use("/wallets", walletsRouter);
 app.use("/transactions", transactionsRouter);
 app.use("/coinlist", coinlistRouter);
 app.use("/portfolio", porfolioRouter);
+
+// Uncomment this to activate cronJob
+// This updates every midnight to get the portfolio value everyday
+// updateAllUserPortfolio();
 
 app.listen(process.env.PORT, () =>
   console.log(`App listening on port ${process.env.PORT}`)

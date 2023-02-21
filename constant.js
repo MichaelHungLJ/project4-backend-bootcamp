@@ -1,6 +1,7 @@
 module.exports = {
   users: {
     GET_USER_ID: `http://localhost:${process.env.PORT}/users/getUserId`,
+    GET_ALL_ID: `http://localhost:${process.env.PORT}/users/getAllUserId`,
   },
   wallets: {
     GET_ALL_WALLETS: `http://localhost:${process.env.PORT}/wallets/getAllWallets`,
@@ -25,5 +26,6 @@ module.exports = {
   },
   portfolio: {
     GET_PORTFOLIO_GROWTH: `http://localhost:${process.env.PORT}/portfolio/getPortfolioGrowth`,
+    UPDATE_PORTFOLIO_DAILY: `http://localhost:${process.env.PORT}/portfolio/updatePortfolio`,
   },
 };
