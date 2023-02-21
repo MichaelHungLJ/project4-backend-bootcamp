@@ -39,6 +39,10 @@ class UsersRouter {
       this.controller.getWalletData.bind(this.controller)
     );
 
+    router.get(
+      "/getPortfolio",
+      this.controller.getPortfolio.bind(this.controller)
+    );
     return router;
   }
 }

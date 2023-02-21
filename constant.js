@@ -8,6 +8,7 @@ module.exports = {
     ADD_WALLET: `http://localhost:${process.env.PORT}/wallets/addWallet`,
     UPDATE_WALLET: `http://localhost:${process.env.PORT}/wallets/updateWallet`,
     DELETE_WALLET: `http://localhost:${process.env.PORT}/wallets/deleteWallet`,
+    GET_WALLET_DATA: `http://localhost:${process.env.PORT}/wallets/getWalletData`,
   },
   transactions: {
     GET_ALL_TXNS: `http://localhost:${process.env.PORT}/transactions/getAllTransactions`,
