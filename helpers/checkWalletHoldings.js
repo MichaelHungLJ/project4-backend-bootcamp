@@ -52,11 +52,12 @@ async function checkWalletHoldings(txndata) {
           const coinId = response.data.data.coinId;
 
           // Get current coin price from coingecko API
+          console.log("COINGECKO API STARTS HERE");
           const coinGeckoPrice = await axios.get(
             constant.coingecko.COIN_PRICE + `?ids=${coinId}&vs_currencies=usd`
           );
           const curr_price = coinGeckoPrice.data[`${coinId}`][`usd`];
-
+          console.log("COINGECKO API ENDS HERE");
           walletData[index]["curr_price"] = curr_price;
         }
 

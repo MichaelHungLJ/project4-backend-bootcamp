@@ -2,7 +2,10 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const BaseController = require("./baseController");
-const { UnauthorizedError, AlreadyTakenError } = require('../helpers/customError.js')
+const {
+  UnauthorizedError,
+  AlreadyTakenError,
+} = require("../helpers/customError.js");
 
 class UsersController extends BaseController {
   constructor(model) {
@@ -19,6 +22,13 @@ class UsersController extends BaseController {
     const id = data.id;
 
     return res.json({ id: id });
+  }
+
+  async getAllUserId(req, res) {
+    const data = await this.model.findAll();
+    const ids = [];
+    data.map((data) => ids.push(data.id));
+    return res.send(ids);
   }
 
   // POST request
@@ -55,19 +65,23 @@ class UsersController extends BaseController {
       if (userExists) throw new AlreadyTakenError("Email", "try logging in");
 
       // creating user
-      console.log("payload:",payload)
+      console.log("payload:", payload);
       const newuser = await this.model.create(payload);
 
-      console.log("newuser,",newuser)
+      console.log("newuser,", newuser);
 
-      delete newuser.dataValues.password
+      delete newuser.dataValues.password;
 
-      newuser.dataValues.token = await jwt.sign(payload, process.env.JWT_SECRET, {
-        expiresIn:"1h"
-      })
+      newuser.dataValues.token = await jwt.sign(
+        payload,
+        process.env.JWT_SECRET,
+        {
+          expiresIn: "1h",
+        }
+      );
 
       // console.log("Wtf is newuser", newuser)
-      return res.status(200).json({newuser});
+      return res.status(200).json({ newuser });
     } catch (err) {
       return res.status(400).json({ success: false, error: err });
     }
@@ -76,8 +90,7 @@ class UsersController extends BaseController {
   // POST request
   // Input: { email : email, password: password}
   async loginUser(req, res) {
-
-    console.log("req",req.body)
+    console.log("req", req.body);
     const user = await this.model.findOne({
       where: { email: req.body.email },
     });
@@ -91,11 +104,11 @@ class UsersController extends BaseController {
     /// VALIDATION ///
 
     try {
-      console.log("req.body.password",req.body.password)
-      console.log("user.password",user.password)
+      console.log("req.body.password", req.body.password);
+      console.log("user.password", user.password);
       const match = await bcrypt.compare(req.body.password, user.password);
 
-      console.log("match",match)
+      console.log("match", match);
       const payload = {
         name: user.name,
         email: user.email,
@@ -105,7 +118,6 @@ class UsersController extends BaseController {
       user.dataValues.token = jwt.sign(payload, process.env.JWT_SECRET, {
         expiresIn: "1h",
       });
-
 
       if (match) {
         return res.json({ user });
@@ -119,19 +131,17 @@ class UsersController extends BaseController {
     }
   }
 
-
-  async currentUser(req, res){
+  async currentUser(req, res) {
     try {
       const loggedUser = req.verifiedToken;
       if (!loggedUser) throw new UnauthorizedError();
-  
+
       // delete loggedUser.password
       res.json({ user: loggedUser });
     } catch (error) {
-      console.log("Error!",error)
+      console.log("Error!", error);
     }
   }
-
 }
 
 module.exports = UsersController;
