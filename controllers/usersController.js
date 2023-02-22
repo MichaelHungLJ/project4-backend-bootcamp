@@ -80,6 +80,9 @@ class UsersController extends BaseController {
         }
       );
 
+      console.log("register UUUUUUUUUSSSSSSSSSEEEEEEERRRRRRR",newuser)
+
+
       // console.log("Wtf is newuser", newuser)
       return res.status(200).json({ newuser });
     } catch (err) {
@@ -119,6 +122,8 @@ class UsersController extends BaseController {
         expiresIn: "1h",
       });
 
+      console.log(".login UUUUUUUUUSSSSSSSSSEEEEEEERRRRRRR",user)
+
       if (match) {
         return res.json({ user });
       } else {
@@ -136,8 +141,13 @@ class UsersController extends BaseController {
       const loggedUser = req.verifiedToken;
       if (!loggedUser) throw new UnauthorizedError();
 
-      // delete loggedUser.password
-      res.json({ user: loggedUser });
+      const user = await this.model.findOne({
+        where: { email: loggedUser.email },
+      });
+
+      delete user.dataValues.password
+      console.log("UUUUUUUUUSSSSSSSSSEEEEEEEERRRRRRR", user.dataValues)
+      res.json({ user: user.dataValues });
     } catch (error) {
       console.log("Error!", error);
     }
