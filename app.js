@@ -60,6 +60,7 @@ app.use("/portfolio", porfolioRouter);
 // This updates every midnight to get the portfolio value everyday
 // updateAllUserPortfolio();
 
+// Just checking the merge
 app.listen(process.env.PORT, () =>
   console.log(`App listening on port ${process.env.PORT}`)
 );
