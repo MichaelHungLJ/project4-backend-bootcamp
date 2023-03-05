@@ -12,10 +12,17 @@ class CoinlistController extends BaseController {
       const symbol = coin.toLowerCase();
 
       const response = await this.model.findOne({ where: { symbol: symbol } });
-
-      return res.status(200).json({ success: true, data: response.dataValues });
+      if (response === null) {
+        return res
+          .status(200)
+          .json({ success: false, message: "Coin not supported" });
+      } else {
+        return res
+          .status(200)
+          .json({ success: true, data: response.dataValues });
+      }
     } catch (error) {
-      return res.status(400).json({ success: false, message: `Error` });
+      return res.status(400).json({ success: false, message: `Bad request` });
     }
   }
 

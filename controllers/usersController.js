@@ -80,8 +80,7 @@ class UsersController extends BaseController {
         }
       );
 
-      console.log("register UUUUUUUUUSSSSSSSSSEEEEEEERRRRRRR",newuser)
-
+      console.log("register UUUUUUUUUSSSSSSSSSEEEEEEERRRRRRR", newuser);
 
       // console.log("Wtf is newuser", newuser)
       return res.status(200).json({ newuser });
@@ -122,7 +121,7 @@ class UsersController extends BaseController {
         expiresIn: "1h",
       });
 
-      console.log(".login UUUUUUUUUSSSSSSSSSEEEEEEERRRRRRR",user)
+      // console.log(".login UUUUUUUUUSSSSSSSSSEEEEEEERRRRRRR",user)
 
       if (match) {
         return res.json({ user });
@@ -145,8 +144,8 @@ class UsersController extends BaseController {
         where: { email: loggedUser.email },
       });
 
-      delete user.dataValues.password
-      console.log("UUUUUUUUUSSSSSSSSSEEEEEEEERRRRRRR", user.dataValues)
+      delete user.dataValues.password;
+      // console.log("UUUUUUUUUSSSSSSSSSEEEEEEEERRRRRRR", user.dataValues)
       res.json({ user: user.dataValues });
     } catch (error) {
       console.log("Error!", error);
