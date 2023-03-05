@@ -3,6 +3,7 @@ const axios = require("axios");
 const constant = require("../constant");
 const checkWalletHoldings = require("../helpers/checkWalletHoldings");
 const combineWallets = require("../helpers/combineWallets");
+const getAllCurrentWalletValue = require("../helpers/getAllCurrentWalletValue");
 
 class UsersController extends BaseController {
   constructor(model) {
@@ -112,93 +113,29 @@ class UsersController extends BaseController {
       });
       const txndata = response.data.data;
 
-      // const txndata = [
-      //   {
-      //     id: 21,
-      //     userId: 5,
-      //     walletId: 6,
-      //     wallet: "Banana",
-      //     date: "2023-02-01T16:00:00.000Z",
-      //     type: "Deposit",
-      //     coin: "USD",
-      //     quantity: "34000",
-      //     price: "1",
-      //     createdAt: "2023-02-22T08:03:07.032Z",
-      //     updatedAt: "2023-02-22T08:03:07.032Z",
-      //   },
-      //   {
-      //     id: 22,
-      //     userId: 5,
-      //     walletId: 6,
-      //     wallet: "Banana",
-      //     date: "2023-02-02T16:00:00.000Z",
-      //     type: "Buy",
-      //     coin: "ETH",
-      //     quantity: "5",
-      //     price: "1500",
-      //     createdAt: "2023-02-22T08:03:41.402Z",
-      //     updatedAt: "2023-02-22T08:03:41.402Z",
-      //   },
-      //   {
-      //     id: 23,
-      //     userId: 5,
-      //     walletId: 6,
-      //     wallet: "Banana",
-      //     date: "2023-02-06T16:00:00.000Z",
-      //     type: "Sell",
-      //     coin: "ETH",
-      //     quantity: "2",
-      //     price: "3000",
-      //     createdAt: "2023-02-22T08:04:13.169Z",
-      //     updatedAt: "2023-02-22T08:04:13.169Z",
-      //   },
-      //   {
-      //     id: 24,
-      //     userId: 5,
-      //     walletId: 6,
-      //     wallet: "Banana",
-      //     date: "2023-02-10T16:00:00.000Z",
-      //     type: "Buy",
-      //     coin: "ETH",
-      //     quantity: "1.5",
-      //     price: "2000",
-      //     createdAt: "2023-02-22T08:04:29.114Z",
-      //     updatedAt: "2023-02-22T08:04:29.114Z",
-      //   },
-      //   {
-      //     id: 27,
-      //     userId: 5,
-      //     walletId: 6,
-      //     wallet: "Banana",
-      //     date: "2023-02-02T16:00:00.000Z",
-      //     type: "Deposit",
-      //     coin: "USD",
-      //     quantity: "100",
-      //     price: "1",
-      //     createdAt: "2023-02-22T10:18:08.211Z",
-      //     updatedAt: "2023-02-22T10:18:08.211Z",
-      //   },
-      //   {
-      //     id: 28,
-      //     userId: 5,
-      //     walletId: 6,
-      //     wallet: "Banana",
-      //     date: "2023-02-21T16:00:00.000Z",
-      //     type: "Deposit",
-      //     coin: "USD",
-      //     quantity: "100",
-      //     price: "1",
-      //     createdAt: "2023-02-22T10:23:36.641Z",
-      //     updatedAt: "2023-02-22T10:23:36.641Z",
-      //   },
-      // ];
-
       // Helper function
       const walletData = await checkWalletHoldings(txndata);
 
       return res.status(200).send(walletData);
     } catch (err) {
       return res.status(400).json({ success: false, error: err });
+    }
+  }
+
+  async getAllWalletData(req, res) {
+    const { user_id } = req.query;
+
+    try {
+      const response = await axios.get(constant.wallets.GET_ALL_WALLETS, {
+        params: { user_id: user_id },
+      });
+
+      const walletList = response.data.wallets;
+      const result = await getAllCurrentWalletValue(walletList, user_id);
+
+      return res.status(200).send({ success: true, data: result });
+    } catch (err) {
+      console.error(err);
     }
   }
 
