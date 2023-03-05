@@ -15,7 +15,8 @@ class PortfoliosController extends BaseController {
       const data = await this.model.findAll({ where: { userId: user_id } });
       return res.send(data);
     } catch (err) {
-      return res.status(400).send("Error: ", err);
+      console.log("Error: ", err);
+      return res.status(400).json({ success: false, message: "Error" });
     }
   }
 
