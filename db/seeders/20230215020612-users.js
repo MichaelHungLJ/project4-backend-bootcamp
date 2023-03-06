@@ -24,6 +24,16 @@ module.exports = {
           biography: null,
           image: null,
         },
+        {
+          name: "demouser",
+          email: "demo@gmail.com",
+          password:
+            "$2b$10$aMPC1QkSAVpkGIO.e5zlE.JWfmYA9JS62Fn6wfGGvbdoMEpVi7xoa",
+          created_at: new Date(),
+          updated_at: new Date(),
+          biography: null,
+          image: null,
+        },
       ],
       {}
     );
